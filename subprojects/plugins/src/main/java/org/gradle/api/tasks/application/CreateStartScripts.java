@@ -15,6 +15,11 @@
  */
 package org.gradle.api.tasks.application;
 
+import org.gradle.api.model.ObjectFactory;
+import org.gradle.internal.jpms.JavaModuleDetector;
+
+import javax.inject.Inject;
+
 /**
  * Creates start scripts for launching JVM applications.
  * <p>
@@ -63,7 +68,8 @@ package org.gradle.api.tasks.application;
  * <li>{@code applicationName}</li>
  * <li>{@code optsEnvironmentVar}</li>
  * <li>{@code exitEnvironmentVar}</li>
- * <li>{@code mainClassName}</li>
+ * <li>{@code mainModule}</li>
+ * <li>{@code mainClass}</li>
  * <li>{@code defaultJvmOpts}</li>
  * <li>{@code appNameSystemProperty}</li>
  * <li>{@code appHomeRelativePath}</li>
@@ -79,4 +85,8 @@ package org.gradle.api.tasks.application;
  * </pre>
  */
 public class CreateStartScripts extends org.gradle.jvm.application.tasks.CreateStartScripts {
+    @Inject
+    public CreateStartScripts(ObjectFactory objectFactory, JavaModuleDetector javaModuleDetector) {
+        super(objectFactory, javaModuleDetector);
+    }
 }

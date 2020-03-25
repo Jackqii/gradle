@@ -15,6 +15,29 @@
             "changes": [
                 "Method has been removed"
             ]
+        },
+        {
+            "type": "org.gradle.api.tasks.application.CreateStartScripts",
+            "member": "Constructor org.gradle.api.tasks.application.CreateStartScripts()",
+            "acceptation": "Not public API - modified dependency injection constructor",
+            "changes": [
+                "Constructor has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.jvm.application.tasks.CreateStartScripts",
+            "member": "Constructor org.gradle.jvm.application.tasks.CreateStartScripts()",
+            "acceptation": "Not public API - modified dependency injection constructor",
+            "changes": [
+                "Constructor has been removed"
+            ]
+        },{
+            "type": "org.gradle.jvm.application.scripts.JavaAppStartScriptGenerationDetails",
+            "member": "Method org.gradle.jvm.application.scripts.JavaAppStartScriptGenerationDetails.getAppNameSystemProperty()",
+            "acceptation": "This was nullable before, but the package is now annotated with @NonNullApi",
+            "changes": [
+                "From non-null returning to null returning breaking change"
+            ]
         }
     ]
 }

@@ -20,9 +20,12 @@ import org.gradle.integtests.fixtures.AbstractIntegrationSpec
 import org.gradle.integtests.fixtures.ToBeFixedForInstantExecution
 import org.gradle.integtests.fixtures.ScriptExecuter
 import org.gradle.util.TextUtil
+import spock.lang.Unroll
 
 class ApplicationPluginConfigurationIntegrationTest extends AbstractIntegrationSpec {
+
     @ToBeFixedForInstantExecution
+    @Unroll
     def "can configure using project extension"() {
         settingsFile << """
             rootProject.name = 'test'
@@ -32,19 +35,32 @@ class ApplicationPluginConfigurationIntegrationTest extends AbstractIntegrationS
             package test;
             public class Main {
                 public static void main(String[] args) {
-                    System.out.println("all good");
+                    System.out.println("Module: " + Main.class.getModule().getName());
                 }
             }
         """
+        file("src/main/java/module-info.java") << "module test.main {}"
 
         buildFile << """
-            plugins { 
-                id("application") 
+            plugins {
+                id("application")
             }
             application {
-                mainClassName = "test.Main"
+                $configClass
+                $configModule
+            }
+            compileJava {
+                modularClasspathHandling.inferModulePath.set(true)
+            }
+            startScripts {
+                modularClasspathHandling.inferModulePath.set(true)
             }
         """
+
+        if (configClass == '') {
+            // set the main class directly in the compile task
+            buildFile << "compileJava { options.javaModuleMainClass.set('test.Main') }"
+        }
 
         when:
         run("installDist")
@@ -57,6 +73,13 @@ class ApplicationPluginConfigurationIntegrationTest extends AbstractIntegrationS
 
         then:
         executer.run().assertNormalExitValue()
-        out.toString() == TextUtil.toPlatformLineSeparators("all good\n")
+        out.toString() == TextUtil.toPlatformLineSeparators("Module: $expectedModule\n")
+
+        where:
+        configClass                   | configModule                  | expectedModule
+        "mainClassName = 'test.Main'" | ''                            | 'null'
+        "mainClass.set('test.Main')"  | ''                            | 'null'
+        "mainClass.set('test.Main')"  | "mainModule.set('test.main')" | 'test.main'
+        ''                            | "mainModule.set('test.main')" | 'test.main'
     }
 }
