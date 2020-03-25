@@ -23,6 +23,7 @@ import org.gradle.instantexecution.serialization.WriteContext
 
 
 object ClosureCodec : Codec<Closure<*>> {
+    private val defaultOwner = Any()
 
     private
     val beanCodec = BeanCodec()
@@ -33,6 +34,9 @@ object ClosureCodec : Codec<Closure<*>> {
     }
 
     override suspend fun ReadContext.decode(): Closure<*>? {
-        return beanCodec.run { decode() as Closure<*> }
+        return beanCodec.run {
+            val closure = decode() as Closure<*>
+            closure.rehydrate(null, defaultOwner, defaultOwner)
+        }
     }
 }
