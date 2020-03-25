@@ -439,9 +439,7 @@ public class DefaultCopySpec implements CopySpecInternal {
 
     @Override
     public CopySpec rename(Transformer<String, String> renamer) {
-        ChainingTransformer<String> transformer = new ChainingTransformer<>(String.class);
-        transformer.add(renamer);
-        appendCopyAction(new RenamingCopyAction(transformer));
+        appendCopyAction(new RenamingCopyAction(renamer));
         return this;
     }
 
