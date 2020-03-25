@@ -22,7 +22,7 @@ import org.gradle.instantexecution.serialization.WriteContext
 import java.util.regex.Pattern
 
 
-object RegexpPatternCodec: Codec<Pattern> {
+object RegexpPatternCodec : Codec<Pattern> {
     override suspend fun WriteContext.encode(value: Pattern) {
         writeString(value.pattern())
         writeInt(value.flags())
