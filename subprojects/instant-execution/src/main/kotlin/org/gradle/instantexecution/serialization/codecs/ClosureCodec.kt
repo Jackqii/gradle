@@ -23,7 +23,8 @@ import org.gradle.instantexecution.serialization.WriteContext
 
 
 object ClosureCodec : Codec<Closure<*>> {
-    private val defaultOwner = Any()
+    private
+    val defaultOwner = Any()
 
     private
     val beanCodec = BeanCodec()
